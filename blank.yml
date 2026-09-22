@@ -1,0 +1,52 @@
+name: Install Terraform on EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  install_terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to EC2 and install Terraform
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.KEY_FILE }}
+
+          script: |
+            set -e
+
+            echo "Connected to EC2"
+
+            echo "Installing required utilities..."
+            sudo dnf install -y curl unzip
+
+            echo "Creating Terraform installation directory..."
+            sudo mkdir -p /dev-data/apps/terraform
+
+            echo "Downloading Terraform..."
+            TERRAFORM_VERSION="1.13.3"
+
+            cd /tmp
+
+            curl -fsSL \
+              -o terraform.zip \
+              "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+
+            echo "Installing Terraform..."
+            sudo unzip -o terraform.zip -d /dev-data/apps/terraform
+
+            echo "Creating global Terraform command..."
+            sudo ln -sf /dev-data/apps/terraform/terraform /usr/local/bin/terraform
+
+            echo "Checking Terraform version..."
+            terraform version
+
+            echo "Terraform installation completed!"
+
+            echo "Terraform actual location:"
+            readlink -f "$(which terraform)"
