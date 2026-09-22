@@ -1,0 +1,36 @@
+name: Install Terraform on EC2
+
+on:
+  push:
+    branches:
+      - main
+  
+  
+jobs:
+  install_terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to EC2 and install Terraform
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.USER_NAME }}
+          key: ${{ secrets.KEY_FILE }}
+
+          script: |
+            echo "Connected to EC2"
+
+            echo "Installing utilities..."
+            sudo dnf install -y dnf-plugins-core
+
+            echo "Adding HashiCorp repository..."
+            sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+
+            echo "Installing Terraform..."
+            sudo dnf install -y terraform
+
+            echo "Checking Terraform version..."
+            terraform version
+
+            echo "Terraform installation completed!"
