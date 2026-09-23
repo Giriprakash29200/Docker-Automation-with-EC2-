@@ -27,5 +27,12 @@ jobs:
             echo "update nginx"
             sudo dnf install nginx -y
 
+            echo "start nigix"
+            sudo systemctl start nginx 
+            sudo systemctl enable nginx
+
+            echo "copy file from home directory!!"
+            sudo cp /home/ec2-user/index.html /usr/share/nginx/html
+
             
             
