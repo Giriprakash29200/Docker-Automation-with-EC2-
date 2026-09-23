@@ -21,16 +21,5 @@ jobs:
           script: |
             echo "Connected to EC2"
 
-            echo "Installing utilities..."
-            sudo dnf install -y dnf-plugins-core
-
             echo "Adding HashiCorp repository..."
-            sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-
-            echo "Installing Terraform..."
-            sudo dnf install -y terraform
-
-            echo "Checking Terraform version..."
-            terraform version
-
-            echo "Terraform installation completed!"
+            sudo cp /home/ec2-user/main.html /usr/share/nginx/html/
