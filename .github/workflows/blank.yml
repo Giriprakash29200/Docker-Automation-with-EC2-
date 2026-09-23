@@ -3,7 +3,7 @@ name: Install Terraform on EC2
 on:
   push:
     branches:
-      - two
+      - main
   
   
 jobs:
